@@ -14,13 +14,13 @@ node {
             junit 'test-reports/results.xml'
         }
     }
-	stage('Deploy') {
+    withDockerContainer('cdrx/pyinstaller-linux:python2') {
         // some block
-        input message: 'lanjutkan ke tahap deploy?'
-        checkout scm
-        sh 'docker run --rm -v /home/dicoding/jenkins/submission/simple-python-pyinstaller-app/sources:/src cdrx/pyinstaller-linux:python2 \'pyinstaller -F add2vals.py\''
-        archiveArtifacts artifacts: 'sources/add2vals.py', followSymlinks: false
-        sh 'docker run --rm -v /home/dicoding/jenkins/submission/simple-python-pyinstaller-app/sources:/src cdrx/pyinstaller-linux:python2 \'rm -rf build dist\''
-        sleep time: 1, unit: 'MINUTES'
+        stage('Deploy') {
+	    input message: 'lanjutkan ke tahap deploy?'
+            checkout scm
+            sh 'pyinstaller --onefile sources/add2vals.py'
+            archiveArtifacts artifacts: 'sources/add2vals.py', followSymlinks: false
+        }
     }
 }
