@@ -14,12 +14,10 @@ node {
             junit 'test-reports/results.xml'
         }
     }
-    stage('Manual Approval'){
-	input message: 'Apakah anda akan melanjutkan ke tahap deploy?'
-    }
 
     stage('Deploy') {
         // some block
+        input message: 'kan ke tahap deploy?'
         checkout scm
         sh 'docker run --rm -v /var/jenkins_home/workspace/submission-cicd-pipeline-nexter3/sources:/src cdrx/pyinstaller-linux:python2 \'pyinstaller -F add2vals.py\''
         archiveArtifacts artifacts: 'sources/add2vals.py', followSymlinks: false
